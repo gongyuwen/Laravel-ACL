@@ -9,7 +9,8 @@
     {
     	"name": "gongyuwen",
     	"email": "gongyuwen_cu@163.com"
-    },
+    }
+    ],
     "extra":{
     	"laravel":{
     		"providers": [
@@ -17,5 +18,4 @@
     		]
     	}
     }
-    ]
 }
