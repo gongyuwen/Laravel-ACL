@@ -1,0 +1,21 @@
+{
+    "name": "gongyuwen/laravel-acl",
+    "description": "ACL for Laravel",
+    "type": "library",
+    "require": {
+        "php": ">=5.6.4",
+    },
+    "authors":[
+    {
+    	"name": "gongyuwen",
+    	"email": "gongyuwen_cu@163.com"
+    },
+    "extra":{
+    	"laravel":{
+    		"providers": [
+    			"LaravelAcl\\ACLProvider"
+    		]
+    	}
+    }
+    ]
+}
