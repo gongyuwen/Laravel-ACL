@@ -1,0 +1,23 @@
+@if( count( $sidebars ))
+<ul class="nav metismenu" id="side-menu">
+@foreach( $sidebars  as $item )
+    <li class="{{ array_has( $item, 'is_current' ) ? 'active' : '' }}">
+        <a href="{{ $item['url'] ? $item['url'] : 'javascript:;' }}">
+            @if( $icon = array_get( $item, 'icon') )
+            <i class="{{ $icon }}"></i>
+            @endif
+            <span class="nav-label">{{ $item['label'] }}</span>
+        </a>
+        @if($subMenu = array_get($item, 'subs') )
+            <ul class="nav nav-second-level collapse {{ array_has( $item, 'is_current') ? 'in' : '' }}">
+                @foreach( $subMenu as $sub_item )
+                    <li class="{{ array_has( $sub_item, 'is_current') ? 'active' : '' }}">
+                        <a href="{{ $sub_item['url'] }}">{{ $sub_item['label'] }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </li>
+@endforeach
+</ul>
+@endif

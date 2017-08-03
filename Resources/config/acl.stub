@@ -1,0 +1,11 @@
+<?php
+return [
+    'default_methods' => [ 'get', 'post' ],
+
+    'default_namespace' => 'App\Http\Controllers\\',
+
+    'group_attributes'  => [ ],
+
+    'menus' => [
+    ],
+];
