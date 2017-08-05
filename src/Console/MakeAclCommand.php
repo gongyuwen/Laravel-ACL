@@ -42,7 +42,7 @@ class MakeAclCommand extends Command
 
         file_put_contents(
             base_path('routes/web.php'),
-            file_get_contents( dirname( __DIR__ ) .'/Resources/routes.stub'),
+            file_get_contents(dirname(__DIR__) . '/Resources/routes.stub'),
             FILE_APPEND
         );
 
@@ -74,7 +74,7 @@ class MakeAclCommand extends Command
             $this->createDirectories( $destination );
 
             copy(
-                dirname( __DIR__ ) . '/Resources/' . $key,
+                dirname(__DIR__) . '/Resources/' . $key,
                 $destination
             );
         }

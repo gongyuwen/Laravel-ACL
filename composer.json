@@ -1,21 +1,25 @@
 {
     "name": "gongyuwen/laravel-acl",
-    "description": "ACL for Laravel",
+    "description": "acl plugin for laravel",
     "type": "library",
-    "require": {
-        "php": ">=5.6.4"
-    },
-    "authors":[
-    {
-    	"name": "gongyuwen",
-    	"email": "gongyuwen_cu@163.com"
-    }
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "gongyuwen",
+            "email": "gongyuwen_cu@163.com"
+        }
     ],
-    "extra":{
-    	"laravel":{
-    		"providers": [
-    			"LaravelAcl\\ACLProvider"
-    		]
-    	}
-    }
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "LaravelAcl\\" : "src/",
+            "LaravelAcl\\Console\\": "src/Console/",
+            "LaravelAcl\\Middleware\\": "src/Middleware"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "prefer-stable": true
 }
