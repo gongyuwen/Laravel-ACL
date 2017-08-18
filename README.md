@@ -53,9 +53,7 @@ return [
 -------------------------------------------------------------------------------------------------------------------------
 Method                  |  Description  |  Required  |  Type  |                     Explain     
 ------------------------| --------------|------------|--------|----------------------------------------------------------
-\ACL::hasAccess()       |    $action    |     Yes    | Mixed  | 1.String use '@', for example: DefaultController@index 
-2.String use '/', for example: users/detail/{user}
-3.Illuminate\Routing\Route, for example: Route::current()
+\ACL::hasAccess()       |    $action    |     Yes    | Mixed  | 1.String use '@', for example: DefaultController@index        2.String use '/', for example: users/detail/{user} 3.Illuminate\Routing\Route, for example: Route::current()
 \ACL::sidebars()        |  ...$menuname |     Yes    | string | the key in config/acl.php menus group                                           
 \ACL::sidebarsExcept()  |  ...$menuname |     No     | string | the key in config/acl.php
 -------------------------------------------------------------------------------------------------------------------------
