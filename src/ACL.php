@@ -79,41 +79,40 @@ class ACL
 
     private function analysisMenuForSiderbar()
     {
-        return function( $menu, $allows = [], $denys = [], $namespaces = [], $maps = [], $depth = [0] )
+        return function( $menu, $allows = [], $denys = [], $namespaces = [], $maps = [], $pieces = [] )
         {
-            if( empty( $maps ) )
-                $maps[ head( $depth) ] = [];
+            if( empty( $maps ))
+                array_push( $maps, [] );
+
 
             list( $allows, $denys ) = $this->getAllowAndDenyAccess( $menu, $allows, $denys );
 
             $namespaces = $this->getNamespaces( $menu, $namespaces );
 
-            if( $subMenu = array_get( $menu, 'items') )
+            if( $subMenu = array_get( $menu, 'items' ) )
             {
-                $callback  = $this->analysisMenuForSiderbar();
+                $callback = $this->analysisMenuForSiderbar();
 
                 if( $label = array_get( $menu, 'label' ) )
                 {
                     $icon = array_get( $menu, 'icon' );
 
-                    list( $maps, $depth ) = $this->setMapsDatas( $maps, $label, $icon, $depth  );
+                    list( $maps, $pieces ) = $this->setMapsDatas( $maps, $label, $icon, $pieces  );
 
                     array_forget( $menu, [ 'label', 'allow', 'deny' ] );
 
-                    $maps = $this->resoveCallback( $callback, $menu, $allows, $denys, $namespaces, $maps, $depth );
+                    $maps = $this->resoveCallback( $callback, $menu, $allows, $denys, $namespaces, $maps, $pieces );
                 }
                 else
                 {
                     foreach ( $subMenu as $item )
-                        $maps = $this->resoveCallback( $callback, $item, $allows, $denys, $namespaces, $maps, $depth );
+                        $maps = $this->resoveCallback( $callback, $item, $allows, $denys, $namespaces, $maps, $pieces );
                 }
             }
             else
             {
-                $label = array_get( $menu, 'label' );
-
-                /*如果没有label 或者 已经有相同label的菜单*/
-                if( !$label || array_has( $maps , $label ) )
+                /*如果没有label 则不需要添加*/
+                if( array_has( $menu, 'label') == FALSE )
                     return $maps;
 
                 /*判断该菜单是否有权限进入*/
@@ -122,12 +121,24 @@ class ACL
                 if( ! $hasAccess )
                     return $maps;
 
+                $label = array_get( $menu, 'label' );
+
+                list( $full_label ) = $this->implodeArrs( $pieces, '\\', $label );
+
                 /*获取url*/
                 list( $action,  ) = $this->implodeArrs( $namespaces, '\\', $menu['action'] );
 
-                $icon = array_get( $menu, 'icon');
+                /*如果已经有相同菜单*/
+                if( array_has( $maps, $full_label )  )
+                {
+                    $depth = array_get( $maps, $full_label );
 
-                list( $maps, ) = $this->setMapsDatas( $maps, $label, $icon, $depth, $action );
+                    return $this->setMapsCurrent( $maps, $action, $depth );
+                }
+
+                $icon = array_get( $menu, 'icon' );
+
+                list( $maps ) = $this->setMapsDatas( $maps, $label, $icon, $pieces, $action );
             }
             return $maps;
         };
@@ -205,7 +216,8 @@ class ACL
 
         list( $target, $depth ) = $this->searchTargetUseDepth( $menu, $depth, $key, $value );
 
-        list( $allows, $denys ) = $this->getAllowAndDenyAccess( $target, $allows, $denys );
+        if( !is_null( $target ) )
+            list( $allows, $denys ) = $this->getAllowAndDenyAccess( $target, $allows, $denys );
 
         return [ $allows, $denys, $depth ];
     }
@@ -404,6 +416,9 @@ class ACL
 
             $target = array_get( $target, $full_path );
 
+            if( is_null( $target ) )
+                return [ null, $depth ];
+
             $selected = null;
 
             foreach ( $target as $index => $item )
@@ -423,8 +438,7 @@ class ACL
             }
         }
     }
-
-    private function setMapsDatas( $maps, $label, $icon, $depth, $action = null )
+    private function setMapsDatas( $maps, $label, $icon, $pieces, $action = null )
     {
         if( array_has( $maps, $label ) && is_null( $action ) )
         {
@@ -434,13 +448,15 @@ class ACL
         }
         else
         {
+            $depth = count( $pieces ) ? array_get( $maps, $this->implodeArrs( $pieces, '\\' ) ) : [0];
+
             $target_path = $this->implodeArrs( $depth );
 
             $len = count( array_get( $maps, $target_path ) );
 
             list( $push_path, $depth ) = $this->implodeArrs( $depth, '.', $len );
 
-            $maps[ $label ] = $depth;
+            list( $full_label ) = $this->implodeArrs( $pieces, '\\', $label );
 
             $append = compact( 'label', 'icon' );
 
@@ -448,17 +464,21 @@ class ACL
             {
                 $append['subs'] = [];
 
-                array_push( $depth, 'subs' );
+                array_push( $depth , 'subs' );
             }
+
             $append['url'] = is_null( $action ) ? '' : URL::action( $action );
 
             array_set( $maps, $push_path, $append );
 
+            $maps[ $full_label ] = $depth;
+
             if( $action )
                 $maps = $this->setMapsCurrent( $maps, $action, $depth );
-
         }
-        return [ $maps, $depth ];
+        array_push( $pieces, $label );
+
+        return [ $maps, $pieces ];
     }
 
     private function setMapsCurrent( $maps, $action, $depth )
