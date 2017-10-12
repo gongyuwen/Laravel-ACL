@@ -368,7 +368,7 @@ class ACL
                 /*如果没有子菜单*/
                 /*Case 0: use DEFAULT_METHODS*/
                 elseif( array_has( $values, 'method') == FALSE )
-                    Route::match( $this->_DEFAULT_METHODS, $values['uri'], $values['action'] );
+                    $route = Route::match( $this->_DEFAULT_METHODS, $values['uri'], $values['action'] );
 
                 /*Case 1: method: ['get','post',...]*/
                 elseif ( is_array( $values['method'] ))
