@@ -385,6 +385,7 @@ class ACL
                 else
                     $route = Route::{$values['method']}( $values['uri'], $values['action'] );
 
+
                 if( isset( $route ) && $name = array_get( $values, 'name') )
                     $route->name( $name );
             }
