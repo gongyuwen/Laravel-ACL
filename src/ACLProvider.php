@@ -28,7 +28,7 @@ class ACLProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('acl', ACL::class );
-
-        class_alias( ACLFacade::class, 'ACL' );
+		if( class_exists('ACL') == false )
+        	class_alias( ACLFacade::class, 'ACL' );
     }
 }
