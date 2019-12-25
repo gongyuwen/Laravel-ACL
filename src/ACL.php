@@ -178,13 +178,11 @@ class ACL
         return $this->getAccessUseRoute( $route );
     }
 
-
-
     private function getAccessUseRoute( RoutingRoute $route )
     {
         $prefix = trim( $route->getPrefix(), '/' );
 
-        $prefixs = array_filter( explode( '/', $prefix ) );
+        $prefixs = strlen( $prefix ) ? array_filter( explode( '/', $prefix ) ) : [0];
 
         $uri = trim( str_replace( $prefix, '', $route->uri() ), '/' );
 
